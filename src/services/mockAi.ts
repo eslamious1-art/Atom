@@ -5,6 +5,7 @@ import {
   Model,
   Nerve,
   Patient,
+  PlanGenerationResult,
   PlanState,
   Sleeve,
   ToothId,
@@ -17,14 +18,6 @@ export interface PlanGenerationPayload {
   teeth: ToothId[];
 }
 
-export interface PlanGenerationResult {
-  implants: Implant[];
-  sleeves: Sleeve[];
-  nerves: Nerve[];
-  model: Model;
-  arch: Arch;
-}
-
 const IMPLANT_DEFAULTS = {
   vendor: 'Generic',
   diameter: 4,
@@ -35,8 +28,8 @@ const IMPLANT_DEFAULTS = {
 const SLEEVE_DEFAULTS = {
   kit: '360 Extended',
   guide: 'Depth Control' as const,
-  offset: 3,
-  totalDrill: 18,
+  offset: 3.0,
+  totalDrill: 18.0,
 };
 
 const NERVE_DEFAULTS: Pick<Nerve, 'visible' | 'diameter'> = {
@@ -75,7 +68,7 @@ const buildSleeves = (implants: Implant[]): Sleeve[] =>
   implants.map((implant) => ({
     id: implant.id,
     implantId: implant.id,
-    label: `${SLEEVE_DEFAULTS.kit} ${implant.diameter.toFixed(1)}`,
+    label: `${SLEEVE_DEFAULTS.kit} · ${SLEEVE_DEFAULTS.guide}`,
     kit: SLEEVE_DEFAULTS.kit,
     guide: SLEEVE_DEFAULTS.guide,
     offset: SLEEVE_DEFAULTS.offset,

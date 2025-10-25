@@ -36,12 +36,7 @@ const EasyModeWizard: React.FC = () => {
   const setFiles = usePlanState((state) => state.setFiles);
   const setTeeth = usePlanState((state) => state.setTeeth);
   const resetPlan = usePlanState((state) => state.resetPlan);
-  const setImplants = usePlanState((state) => state.setImplants);
-  const setSleeves = usePlanState((state) => state.setSleeves);
-  const setNerves = usePlanState((state) => state.setNerves);
-  const setModel = usePlanState((state) => state.setModel);
-  const setArch = usePlanState((state) => state.setArch);
-  const setSelection = usePlanState((state) => state.setSelection);
+  const applyGenerationResult = usePlanState((state) => state.applyGenerationResult);
 
   const [localPatient, setLocalPatient] = useState(patient);
   const [localFiles, setLocalFiles] = useState(files);
@@ -161,14 +156,7 @@ const EasyModeWizard: React.FC = () => {
         teeth: localTeeth,
       });
 
-      setImplants(result.implants);
-      setSleeves(result.sleeves);
-      setNerves(result.nerves);
-      setModel(result.model);
-      setArch(result.arch);
-      setSelection(
-        result.implants.length ? { type: 'implant', id: result.implants[0].id } : null,
-      );
+      applyGenerationResult(result);
 
       trackEvent('ai_generation_complete', {
         implantCount: result.implants.length,

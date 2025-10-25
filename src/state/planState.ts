@@ -94,6 +94,14 @@ export interface PlanState {
   transparency: number;
 }
 
+export interface PlanGenerationResult {
+  implants: Implant[];
+  sleeves: Sleeve[];
+  nerves: Nerve[];
+  model: Model;
+  arch: Arch;
+}
+
 export interface PlanActions {
   resetPlan: () => void;
   setPatient: (patient: Partial<Patient>) => void;
@@ -112,6 +120,7 @@ export interface PlanActions {
   setNerves: (nerves: Nerve[]) => void;
   updateNerve: (nerveId: number, updates: Partial<Nerve>) => void;
   setSelection: (selection: Selection) => void;
+  applyGenerationResult: (result: PlanGenerationResult) => void;
   setViewMode: (viewMode: ViewMode) => void;
   setShow2DLines: (visible: boolean) => void;
   setShowModel: (visible: boolean) => void;
@@ -195,6 +204,15 @@ export const usePlanState = create<PlanStore>((set, get) => ({
       ),
     })),
   setSelection: (selection) => set({ selection }),
+  applyGenerationResult: (result) =>
+    set({
+      implants: [...result.implants],
+      sleeves: [...result.sleeves],
+      nerves: [...result.nerves],
+      arch: result.arch,
+      model: { ...result.model },
+      selection: result.implants.length ? { type: 'implant', id: result.implants[0].id } : null,
+    }),
   setViewMode: (viewMode) => set({ viewMode }),
   setShow2DLines: (visible) => set({ show2DLines: visible }),
   setShowModel: (visible) => set({ showModel: visible }),
@@ -211,6 +229,29 @@ export const resetPlanState = (): void => {
 
 export const getCurrentPlanState = (): PlanState => {
   const { resetPlan, ...rest } = usePlanState.getState();
-  const { setPatient, setFiles, setTeeth, setModel, setArch, addImplant, updateImplant, removeImplant, addSleeve, updateSleeve, removeSleeve, setNerves, updateNerve, setSelection, setViewMode, setShow2DLines, setShowModel, setShowImplants, setShowNerves, setTransparency, ...planState } = rest;
+  const {
+    setPatient,
+    setFiles,
+    setTeeth,
+    setModel,
+    setArch,
+    addImplant,
+    updateImplant,
+    removeImplant,
+    addSleeve,
+    updateSleeve,
+    removeSleeve,
+    setNerves,
+    updateNerve,
+    setSelection,
+    applyGenerationResult,
+    setViewMode,
+    setShow2DLines,
+    setShowModel,
+    setShowImplants,
+    setShowNerves,
+    setTransparency,
+    ...planState
+  } = rest;
   return planState;
 };
